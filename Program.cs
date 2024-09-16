@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 static void crearArchivo(string nombre, string datoAlmacenar){
     string  rutaGeneral  = Directory.GetCurrentDirectory();
@@ -7,6 +8,12 @@ static void crearArchivo(string nombre, string datoAlmacenar){
         // Crea la carpeta ya que no existe
         string rutaCarpeta = Path.Combine(rutaEvaluar, nombre);
         Directory.CreateDirectory(rutaCarpeta);
+        // SE CREARA LA TABLA FAT DEL ARCHIVO (sera lo ultimo que se haga)
+        string direccionTablaFAT = $"{rutaCarpeta}/TablaFat.json";
+        TablaFat tablaFat = new TablaFat(nombre,$"{rutaCarpeta}/{nombre}-{1}.json", datoAlmacenar.Length);
+        // Serializar el objeto a JSON
+        string jsonStringFAT = JsonSerializer.Serialize(tablaFat);
+        File.WriteAllText(direccionTablaFAT, jsonStringFAT);
 
         // Se crearan los archivos del contenido
         string datosIngresar = "";
@@ -30,7 +37,7 @@ static void crearArchivo(string nombre, string datoAlmacenar){
                 contador += 1;
                 datosIngresar = "";
             }
-            
+
             else if(datosIngresar.Length < 20  && datoAlmacenar.Length % 20 != 0 && datoAlmacenar.Length / 20 == contador - 1){
                 string direccionArch = $"{rutaCarpeta}/{nombre}-{contador}.json";
                 // Serializar el objeto a JSON
@@ -41,12 +48,7 @@ static void crearArchivo(string nombre, string datoAlmacenar){
 
         }
 
-        // SE CREARA LA TABLA FAT DEL ARCHIVO (sera lo ultimo que se haga)
-        string direccionTablaFAT = $"{rutaCarpeta}/TablaFat-{nombre}.json";
-        TablaFat tablaFat = new TablaFat(nombre,$"{rutaCarpeta}/{nombre}-{1}.json", datoAlmacenar.Length);
-        // Serializar el objeto a JSON
-        string jsonStringFAT = JsonSerializer.Serialize(tablaFat);
-        File.WriteAllText(direccionTablaFAT, jsonStringFAT);
+        
     }
     
     else{
@@ -62,13 +64,77 @@ No se creara ningun archivo");
     }
 }
 
+static void listarArchivo(List<Dictionary<string, Archivo>> archivos, List<TablaFat> tablaFats){
+    string  rutaGeneral  = Directory.GetCurrentDirectory();
+    string rutaEvaluar = $"{rutaGeneral}/archivosTrabajados";
+    string[] subcarpetas = Directory.GetDirectories(rutaEvaluar);
+    int contador = 0; 
+    
+    foreach (string subcarpeta in subcarpetas)
+        {
+            string[] archivosCarpeta = Directory.GetFiles(subcarpeta);
+            int contador2 = 0;
+            Dictionary<string, Archivo> diccionario = new Dictionary<string, Archivo>();
+            foreach (string archivo in archivosCarpeta)
+
+            {
+                if(archivo == $"{subcarpeta}\\TablaFat.json"){
+                    contador += 1;
+                    string jsonFromFile = File.ReadAllText(archivo);
+                    TablaFat var = JsonSerializer.Deserialize<TablaFat>(jsonFromFile)!;
+                    tablaFats.Add(var);
+                    if(!var.papelera){
+                        Console.WriteLine($"----Archivo Número {contador}---- \n-Nombre: {var.nombre} \n-Caracteres: {var.caracteres} \n-Fecha creación: {var.fechaCreacion} \n-Fecha modificación: {var.fechaModificacion} \n");
+
+                    }
+                }
+                else{
+                    contador2 += 1;
+                    
+                    string jsonFromFile = File.ReadAllText(archivo);
+                    Archivo var = JsonSerializer.Deserialize<Archivo>(jsonFromFile)!;
+                
+                    diccionario.Add($"Archivo{contador2}", var);
+
+                }
+                
+
+            }
+            archivos.Add(diccionario);
+            }
+
+}
+
+
+static void abrirArchivo(List<Dictionary<string, Archivo>> archivos, List<TablaFat> tablaFats, int opcion){
+    try{
+        Dictionary<string, Archivo> archivoAcceder = archivos[opcion - 1];
+        string contenido = "";
+
+        foreach(Archivo arch in archivoAcceder.Values){
+            contenido += arch.datos;
+        }
+
+        TablaFat tablaAcceder = tablaFats[opcion - 1];
+
+        Console.WriteLine($"----Archivo {tablaAcceder.nombre}---- \n-Caracteres: {tablaAcceder.caracteres} \n-Fecha creación: {tablaAcceder.fechaCreacion} \n-Fecha modificación: {tablaAcceder.fechaModificacion} \n Contenido:");
+        Console.WriteLine(contenido);
+    }
+    catch{
+        Console.WriteLine("El número enviado no existe");
+    }
+    
+
+}
+
 static void main(){
     string nombreCarpeta = "archivosTrabajados";
     if (!Directory.Exists(nombreCarpeta)){
         Directory.CreateDirectory(nombreCarpeta);
     }
     
-    List<TablaFat>archivos=[];
+    List<Dictionary<string, Archivo>>archivos=[];
+    List<TablaFat> tablas = [];
     while (true){
         Console.WriteLine(@"----Inicio----
 1. Crear un archivo y agregar datos
@@ -90,30 +156,34 @@ static void main(){
         }
         
         else if (opcion == "2"){
-            // Aqui va a estar mi función listar
+            listarArchivo(archivos, tablas);
         }
         else if (opcion == "3"){
-            // Aqui va a estar mi función listar
-            Console.WriteLine("Ingresa el archivo que desees ver");
+            listarArchivo(archivos, tablas);
+            Console.WriteLine("Ingresa el NÚMERO del archivo que desees ver");
             string opcionArchivo = Console.ReadLine()!;
+            abrirArchivo(archivos, tablas, int.Parse(opcionArchivo));
         }
 
         else if (opcion == "4"){
-            // Aqui va a estar mi función listar
-            Console.WriteLine("Ingresa el archivo que desees modificar");
+            listarArchivo(archivos, tablas);
+            Console.WriteLine("Ingresa el NÚMERO del archivo que desees modificar");
             string opcionArchivo = Console.ReadLine()!;
+            abrirArchivo(archivos, tablas, int.Parse(opcionArchivo));
 
         }
 
         else if(opcion == "5"){
-            // Aqui va a estar mi función listar
-            Console.WriteLine("Ingresa el archivo que desees eliminar");
+            listarArchivo(archivos, tablas);
+            Console.WriteLine("Ingresa el NÚMERO del archivo que desees eliminar");
             string opcionArchivo = Console.ReadLine()!;
+            abrirArchivo(archivos, tablas, int.Parse(opcionArchivo));
         }
         else if(opcion == "6"){
-            // Aqui va a estar mi función listar papelera
-            Console.WriteLine("Ingresa el archivo que desees recuperar");
+            listarArchivo(archivos, tablas);
+            Console.WriteLine("Ingresa el NÚMERO del archivo que desees recuperar");
             string opcionArchivo = Console.ReadLine()!;
+            abrirArchivo(archivos, tablas, int.Parse(opcionArchivo));
         }
         else if(opcion == "7"){
             break;
