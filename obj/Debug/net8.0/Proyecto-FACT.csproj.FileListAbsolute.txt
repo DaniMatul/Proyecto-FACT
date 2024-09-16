@@ -1,0 +1,15 @@
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\bin\Debug\net8.0\Proyecto-FACT.exe
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\bin\Debug\net8.0\Proyecto-FACT.deps.json
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\bin\Debug\net8.0\Proyecto-FACT.runtimeconfig.json
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\bin\Debug\net8.0\Proyecto-FACT.dll
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\bin\Debug\net8.0\Proyecto-FACT.pdb
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.AssemblyInfoInputs.cache
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.AssemblyInfo.cs
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.csproj.CoreCompileInputs.cache
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.sourcelink.json
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.dll
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\refint\Proyecto-FACT.dll
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.pdb
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\Proyecto-FACT.genruntimeconfig.cache
+C:\Users\mayda\Desktop\Programación\C#\Proyecto-FACT\obj\Debug\net8.0\ref\Proyecto-FACT.dll
