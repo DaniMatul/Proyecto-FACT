@@ -122,6 +122,62 @@ static void abrirArchivo(List<Dictionary<string, Archivo>> archivos, List<TablaF
 
 }
 
+static void modificar(string texto, List<Dictionary<string, Archivo>> archivos, List<TablaFat> tablaFats, int opcion){
+    try{
+
+        string  rutaGeneral  = Directory.GetCurrentDirectory();
+        Dictionary<string, Archivo> archivoAcceder = archivos[opcion - 1];
+        TablaFat tablaAcceder = tablaFats[opcion - 1];
+        string nuevoTexto = "";
+        int contador = 0;
+
+
+        foreach(Archivo arch in archivoAcceder.Values){
+
+            for(int i = 0; i < texto.Length; i++){
+            nuevoTexto += texto[i];
+            texto.Replace($"{texto[i]}", "");
+                if (nuevoTexto.Length == 20){
+                    arch.datos = nuevoTexto;
+                    contador += 1;
+                    break;
+                    
+                }
+
+                else if(nuevoTexto.Length < 20  && texto.Length % 20 != 0 && texto.Length / 20 == contador - 1){
+                    arch.datos = nuevoTexto;
+                    contador += 1;
+                    break;
+                
+                }}
+            string filePathArchivo = $"{rutaGeneral}\\archivosTrabajados\\{tablaAcceder.nombre}\\{arch.nombre}.json";
+            string jsonStringArch = JsonSerializer.Serialize(arch);
+            File.WriteAllText(filePathArchivo, jsonStringArch);
+        }
+
+        tablaAcceder.fechaModificacion = DateTime.Now;
+        tablaAcceder.caracteres = texto.Length;
+
+
+        // Serializar el objeto a JSON
+        string filePathTabla = $"{rutaGeneral}\\archivosTrabajados\\{tablaAcceder.nombre}\\TablaFat.json";
+        Console.WriteLine($"Aqui estoyy: {filePathTabla}");
+        
+        
+        string jsonString = JsonSerializer.Serialize(tablaAcceder);
+        File.WriteAllText(filePathTabla, jsonString);
+
+
+
+    }
+    catch{
+        Console.WriteLine("El número enviado no existe");
+    }
+    }
+
+
+
+
 static void eliminar(List<Dictionary<string, Archivo>> archivos, List<TablaFat> tablaFats, int opcion){
     try{
 
@@ -280,6 +336,10 @@ static void main(){
             Console.WriteLine("Ingresa el NÚMERO del archivo que desees modificar");
             string opcionArchivo = Console.ReadLine()!;
             abrirArchivo(archivos, tablas, int.Parse(opcionArchivo));
+
+            Console.WriteLine("Ingrese el texto nuevo: ");
+            string texto = Console.ReadLine()!;
+            modificar(texto, archivos, tablas, int.Parse(opcionArchivo));
             archivos = [];
             tablas = [];
 
