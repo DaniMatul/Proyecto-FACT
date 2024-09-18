@@ -13,8 +13,8 @@ class TablaFat{
         this.ruta = ruta;
         this.papelera = false;
         this.caracteres = caracteres;
-        this.fechaCreacion = DateTime.Today;
-        this.fechaModificacion = DateTime.Today; 
+        this.fechaCreacion = DateTime.Now;
+        this.fechaModificacion = DateTime.Now; 
         
     }        
 };
